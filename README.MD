@@ -12,9 +12,9 @@ Projeto desenvolvido para a disciplina de Probabilidade e Estatística, focado n
 - **Scipy** (Testes de hipótese e inferência)
 
 ## 📈 Funcionalidades
-- [cite_start]**Comparativo Temporal**: Analisa a variação de preços entre as coletas realizadas por Igor [cite: 1] [cite_start]e Gladson[cite: 2].
+- **Comparativo Temporal**: Analisa a variação de preços entre as coletas realizadas por Igor e Gladson.
 - **Laboratório Estatístico**: Cálculos de Média, Moda, Mediana, Desvio Padrão e Teste t-Student.
-- [cite_start]**Análise Socioeconômica**: Cruzamento de dados de custo da cesta com indicadores do IBGE (PIB e Renda) de diversos municípios do RN[cite: 11, 12, 13, 14].
+- **Análise Socioeconômica**: Cruzamento de dados de custo da cesta com indicadores do IBGE (PIB e Renda) de diversos municípios do RN.
 
 ## 🚀 Como executar
 1. Instale as dependências: `pip install -r requirements.txt`
