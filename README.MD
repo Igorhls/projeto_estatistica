@@ -2,6 +2,8 @@
 
 Projeto desenvolvido para a disciplina de Probabilidade e Estatística, focado na análise de preços de itens da cesta básica em supermercados do Rio Grande do Norte e seu impacto socioeconômico.
 
+## 💻 Site: https://projetoestatisticavzn.streamlit.app/
+
 ## 🛠️ Tecnologias Utilizadas
 - **Python 3.13**
 - **Streamlit** (Interface Web)
