@@ -43,19 +43,19 @@ if df_igor is not None:
     """)
     st.markdown("---")
 
-    # Sidebar de Navegação
+    # Sidebar de Navegação (AJUSTADO)
     st.sidebar.header("Navegação do Projeto")
     menu = st.sidebar.radio(
         "Escolha o Módulo:", 
-        ["1. Comparativo de Preços (Temporal)", 
-         "2. Laboratório de Estatística (Inferência)",
+        ["1. Comparativo de Preços", 
+         "2. Laboratório de Estatística",
          "3. Impacto Socioeconômico (IBGE)"]
     )
 
     # ---------------------------------------------------------
-    # MÓDULO 1: APRESENTAÇÃO GRÁFICA E TENDÊNCIA (Séries Temporais)
+    # MÓDULO 1: APRESENTAÇÃO GRÁFICA E TENDÊNCIA
     # ---------------------------------------------------------
-    if menu == "1. Comparativo de Preços (Temporal)":
+    if menu == "1. Comparativo de Preços":
         st.subheader("📈 Análise Temporal de Preços")
         st.caption("Objetivo: Comparar a evolução dos preços nas 4 semanas de coleta.")
         
@@ -100,9 +100,9 @@ if df_igor is not None:
             st.dataframe(total_gladson.style.format("R$ {:.2f}"))
 
     # ---------------------------------------------------------
-    # MÓDULO 2: ESTATÍSTICA APLICADA (Descritiva e Inferencial)
+    # MÓDULO 2: ESTATÍSTICA APLICADA
     # ---------------------------------------------------------
-    elif menu == "2. Laboratório de Estatística (Inferência)":
+    elif menu == "2. Laboratório de Estatística":
         st.header("🔬 Laboratório de Análise Estatística")
         st.caption("Módulos: Distribuição de Frequência, Medidas de Centralidade, Estimação Intervalar e Teste de Hipóteses.")
         
@@ -190,7 +190,7 @@ if df_igor is not None:
             col_res2.success(f"**Decisão: Não Rejeitar $H_0$.**\n\nComo o P-valor ({p_val:.4f}) é maior que 0.05, não há evidências suficientes para afirmar que os preços são diferentes. A variação observada pode ser fruto do acaso.")
 
     # ---------------------------------------------------------
-    # MÓDULO 3: DADOS SOCIOECONÔMICOS (Contexto Regional)
+    # MÓDULO 3: DADOS SOCIOECONÔMICOS
     # ---------------------------------------------------------
     elif menu == "3. Impacto Socioeconômico (IBGE)":
         st.subheader("🏙️ Indicadores Regionais - Rio Grande do Norte")
