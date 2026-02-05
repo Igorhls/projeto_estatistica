@@ -43,7 +43,7 @@ if df_igor is not None:
     """)
     st.markdown("---")
 
-    # Sidebar de Navegação (AJUSTADO)
+    # Sidebar de Navegação
     st.sidebar.header("Navegação do Projeto")
     menu = st.sidebar.radio(
         "Escolha o Módulo:", 
@@ -112,7 +112,7 @@ if df_igor is not None:
         dados_i = df_igor[df_igor["Item"] == item_teste].iloc[:, 1:].values.flatten()
         dados_g = df_gladson[df_gladson["Item"] == item_teste].iloc[:, 1:].values.flatten()
         
-        # --- A. DISTRIBUIÇÃO DE FREQUÊNCIA ---
+        # --- A. DISTRIBUIÇÃO DE FREQUÊNCIA (HISTOGRAMA) ---
         st.subheader("A. Distribuição de Frequência (Histograma)")
         
         # Unificando dados para o histograma
@@ -121,11 +121,31 @@ if df_igor is not None:
             "Fonte": ["Igor"]*len(dados_i) + ["Gladson"]*len(dados_g)
         })
         
-        fig_hist = px.histogram(df_hist, x="Preço", color="Fonte", barmode="overlay",
-                                title=f"Histograma de Preços: {item_teste}",
-                                labels={"Preço": "Faixa de Preço (R$)", "count": "Frequência"},
-                                opacity=0.7, nbins=10)
+        fig_hist = px.histogram(
+            df_hist, 
+            x="Preço", 
+            color="Fonte", 
+            barmode="overlay",
+            title=f"Distribuição: Frequência de Preços para '{item_teste}'",
+            labels={
+                "Preço": "Faixa de Preço Encontrada (R$)", 
+                "count": "Frequência (Nº de Ocorrências)",
+                "Fonte": "Origem do Preço"
+            },
+            opacity=0.7, 
+            nbins=10
+        )
+        
+        fig_hist.update_xaxes(tickprefix="R$ ")
+        fig_hist.update_layout(yaxis_title="Frequência (Qtd. de vezes)")
         st.plotly_chart(fig_hist, use_container_width=True)
+        
+        st.info("""
+        💡 **Dica de Leitura:** As barras mostram quais faixas de preço são mais comuns.
+        Se as cores estiverem separadas, indica que um supermercado é consistentemente mais caro ou barato que o outro.
+        """)
+
+        st.markdown("---")
 
         # --- B. MEDIDAS DE TENDÊNCIA CENTRAL E DISPERSÃO ---
         st.subheader("B. Estatística Descritiva")
@@ -134,10 +154,10 @@ if df_igor is not None:
         def calcular_metricas(dados):
             media = np.mean(dados)
             mediana = np.median(dados)
-            # Tratamento para moda (scipy retorna objeto ModeResult)
+            # Tratamento para moda
             moda_res = stats.mode(dados, keepdims=True)
             moda = moda_res[0][0]
-            desvio = np.std(dados, ddof=1) # ddof=1 para desvio padrão amostral
+            desvio = np.std(dados, ddof=1)
             return media, mediana, moda, desvio
 
         m_i = calcular_metricas(dados_i)
@@ -161,7 +181,6 @@ if df_igor is not None:
 
         # --- C. ESTIMAÇÃO INTERVALAR ---
         st.subheader("C. Estimação Intervalar (IC 95%)")
-        st.info("Intervalo onde se espera encontrar a verdadeira média de preço da população.")
         
         # Calculando IC para Igor
         erro_padrao = stats.sem(dados_i)
@@ -170,8 +189,12 @@ if df_igor is not None:
         st.write(f"Para a lista do **Igor**, com 95% de confiança, o preço médio verdadeiro do item **{item_teste}** está entre:")
         st.markdown(f"### [ R$ {intervalo[0]:.2f}  —  R$ {intervalo[1]:.2f} ]")
 
+        st.markdown("---")
+
         # --- D. TESTE DE HIPÓTESE ---
         st.subheader("D. Teste de Hipótese (t-Student)")
+        
+        # Correção do símbolo Alpha usando LaTeX
         st.markdown("""
         * **Hipótese Nula ($H_0$):** As médias de preços das duas listas são IGUAIS.
         * **Hipótese Alternativa ($H_1$):** As médias de preços das duas listas são DIFERENTES.
@@ -180,14 +203,20 @@ if df_igor is not None:
         
         t_stat, p_val = stats.ttest_ind(dados_i, dados_g)
         
-        col_res1, col_res2 = st.columns([1, 3])
-        col_res1.metric("Estatística t", f"{t_stat:.2f}")
-        col_res1.metric("P-valor", f"{p_val:.4f}")
+        # NOVO LAYOUT: Métricas em cima, Decisão em baixo (toda a largura)
+        c_metrica1, c_metrica2 = st.columns(2)
         
+        with c_metrica1:
+            st.metric("Estatística t", f"{t_stat:.2f}")
+        
+        with c_metrica2:
+            st.metric("P-valor", f"{p_val:.4f}")
+
+        # Caixa de decisão ocupando largura total para não ficar deslocada
         if p_val < 0.05:
-            col_res2.error(f"**Decisão: Rejeitar $H_0$.**\n\nComo o P-valor ({p_val:.4f}) é menor que 0.05, concluímos que existe uma diferença estatisticamente significativa entre os preços praticados nas duas listas.")
+            st.error(f"**Decisão: Rejeitar $H_0$**\n\nComo o P-valor ({p_val:.4f}) é **menor** que 0.05 ($\\alpha$), concluímos que existe uma diferença estatisticamente significativa entre os preços.")
         else:
-            col_res2.success(f"**Decisão: Não Rejeitar $H_0$.**\n\nComo o P-valor ({p_val:.4f}) é maior que 0.05, não há evidências suficientes para afirmar que os preços são diferentes. A variação observada pode ser fruto do acaso.")
+            st.success(f"**Decisão: Não Rejeitar $H_0$**\n\nComo o P-valor ({p_val:.4f}) é **maior** que 0.05 ($\\alpha$), não há evidências suficientes para afirmar que os preços são diferentes. A variação observada pode ser fruto do acaso.")
 
     # ---------------------------------------------------------
     # MÓDULO 3: DADOS SOCIOECONÔMICOS
